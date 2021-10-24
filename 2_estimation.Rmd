@@ -1,0 +1,34 @@
+---
+title: "2_Estimation"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## 2.1 Linear Model
+
+
+## 2.2 Matrix representation
+
+
+
+## 2.3 Estimating beta
+
+
+Inline math, such as $\beta$ appears as this.
+
+
+$$
+y = mx + b
+$$
+
+
+$$
+y_{i} = \beta_{0} + \beta_{1} x_{i1} + \beta_{2} x_{i2} + ... + \epsilon_{i}
+$$
+
+
+
