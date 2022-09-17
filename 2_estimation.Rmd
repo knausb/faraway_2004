@@ -1,6 +1,8 @@
 ---
 title: "2_Estimation"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -9,6 +11,20 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ## 2.1 Linear Model
+
+
+
+$$
+y = mx + b
+$$
+
+
+
+$$
+y_{i} = \beta_{0} + \beta_{1} x_{i1} + \beta_{2} x_{i2} + ... + \epsilon_{i}
+$$
+
+
 
 
 ## 2.2 Matrix representation
@@ -21,14 +37,8 @@ knitr::opts_chunk$set(echo = TRUE)
 Inline math, such as $\beta$ appears as this.
 
 
-$$
-y = mx + b
-$$
 
 
-$$
-y_{i} = \beta_{0} + \beta_{1} x_{i1} + \beta_{2} x_{i2} + ... + \epsilon_{i}
-$$
 
 
 
