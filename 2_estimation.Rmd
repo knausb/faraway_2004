@@ -38,6 +38,225 @@ Inline math, such as $\beta$ appears as this.
 
 
 
+```{r}
+my_n <- 100
+my_sd <- 2
+my_control <- 40
+my_size <- 20
+
+set.seed(999)
+my_df <- data.frame(
+  my_trait = rnorm(n = my_n, mean = my_control, sd = my_sd),
+  my_group = rep( c(1, 2), each = my_n/2)
+)
+#my_df$my_group <- paste("Group_", my_df$my_group, sep = "")
+my_df$my_trait[ my_df$my_group == 2 ] <- my_df$my_trait[ my_df$my_group == 2 ] + my_size
+
+library(ggplot2)
+
+#binwidth = 1
+#n_bins <- length(ggplot2:::bin_breaks_width(range(my_df$my_trait), width = binwidth)$breaks) - 1L
+
+# p <- ggplot( data = my_df, mapping = aes( x = my_trait, group = my_group) )
+# p <- p + geom_histogram()
+# p + facet_grid(my_group ~ .)
+# p <- ggplot(my_df, aes( x = my_trait, fill = cut(my_trait, breaks = 100)))
+
+#p <- ggplot(my_df, aes( x = my_trait, fill = seq(0, 100, by = 1)))
+
+p <- ggplot(my_df, aes( x = my_trait, fill = cut(my_trait, breaks = seq(0, 100, by = 1))))
+p <- p + geom_histogram(show.legend = FALSE, binwidth = 1)
+p <- p + facet_grid(my_group ~ .)
+p <- p + theme_bw()
+p
+
+#
+my_df$my_group <- as.factor(my_df$my_group)
+lm1 <- lm( my_trait ~ my_group, data = my_df)
+summary(lm1)
+
+```
+
+
+```{r}
+my_n <- 100
+my_sd <- 10
+x1 <- rnorm(n = my_n, mean = 20, sd = my_sd)
+x2 <- rnorm(n = my_n, mean = 80, sd = my_sd)
+
+
+my_col <- rainbow(n=my_n, start = 0, end = 1)
+
+# par(mfrow = c(2, 1))
+# 
+# barplot(table(cut(x = x1, breaks = seq(0, 100, by = 1))), space = 0, col = my_col, las =3)
+# barplot(table(cut(x = x2, breaks = seq(0, 100, by = 1))), space = 0, col = my_col, las =3)
+# 
+# par(mfrow = c(1, 1))
+
+```
+
+
+
+```{r}
+
+#t(1) * 1
+
+#my_x <- sample( x = seq(0, 1, length.out = 10), size = 11, replace = T)
+
+
+hist(rnorm(n = 40, mean = 10, sd = 1))
+
+my_n <- 20
+#my_sd <- 1.2
+#
+my_sd <- 0.4
+set.seed(seed = 999)
+my_df <- data.frame(
+  x = sample( x = c(0,1,2), size = my_n, replace = T),
+  y = rnorm( n = my_n, mean = 10, sd = my_sd)
+)
+my_df[1:3, ]
+
+plot(my_df$x, my_df$y)
+abline( h = seq(0, 20, by = 1), col = "#C0C0C0", lty =3)
+
+#hist(my_df$y)
+#barplot(table(cut(my_df$y, breaks = seq(0, 14, by = 1))), las = 3)
+
+#my_effect <- 0.1
+#
+my_effect <- 1.4
+#my_effect <- 5
+my_df$y[ my_df$x == 1 ] <- my_df$y[ my_df$x == 1 ] + my_effect
+my_df$y[ my_df$x == 2 ] <- my_df$y[ my_df$x == 2 ] + 2 * my_effect
+my_df[1:3, ]
+
+#plot(my_df$x, my_df$y)
+
+#
+lm1 <- lm(y ~ x , data = my_df)
+#lm1 <- lm(my_trait ~ my_group , data = my_df)
+names(lm1)
+summary(lm1)
+#lm1
+
+#t.test(x = )
+
+#pf(q = 20, df1=1, df2=18)
+
+plot(my_df$x, my_df$y)
+abline(lm1)
+abline( h = seq(0, 20, by = 1), col = "#C0C0C0", lty =3)
+
+
+p <- ggplot(data = my_df, mapping = aes( x = x, y = y))
+p <- p + geom_point()
+p <- p + theme_bw()
+p + geom_abline( slope = lm1$coefficients[2], intercept = lm1$coefficients[1])
+# 
+p + geom_smooth(method = lm, level = 0.95)
+#p + geom_smooth(method = lm, level = 0.45)
+
+# loess method: local regression fitting
+# p + geom_smooth(method = "loess")
+
+
+
+x <- model.matrix( ~ x, data = my_df)
+x[1:3, ]
+
+y <- my_df$y
+
+xtxi <- solve(t(x) %*% x)
+xtxi # Beta by Beta matrix.
+
+xtxi %*% t(x) %*% y
+
+solve(crossprod(x, x), crossprod(x, y))
+
+```
+
+
+
+$$
+y = 1n\mu + Zu + \epsilon
+$$
+
+
+where
+
+- $y$ is a vector of phenotypic values
+- $\mu$ is the overall mean
+- $1\n$ is a vector of ones
+- $Z$ is s matrix allocating (phenotypic???) records to breeding values
+- $u$ is a vector of breeding values
+- $\epsilon$ is a vector of normally distributed random error
+
+
+https://CRAN.R-project.org/package=sommer
+
+
+
+```{r}
+n <- 10
+
+rep(1, times = n) %*% matrix(7)
+
+Z <- matrix(rnorm(n=n, mean = 10, sd = 1), nrow = n, ncol = 1)
+
+
+```
+
+
+
+
+## 2.8 Example
+
+
+```{r}
+library(faraway)
+data(gala)
+gala[1:3, ]
+nrow(gala) # Islands
+
+md1 <- lm(Species ~ Area + Elevation + Nearest + Scruz + Adjacent, data = gala)
+summary(md1)
+coefficients(md1)
+
+```
+
+
+```{r}
+x <- model.matrix( ~ Area + Elevation + Nearest + Scruz + Adjacent, data = gala)
+x[1:3, ]
+
+y <- gala$Species
+
+xtxi <- solve(t(x) %*% x)
+xtxi # Beta by Beta matrix.
+
+xtxi %*% t(x) %*% y
+
+solve(crossprod(x, x), crossprod(x, y))
+
+names(md1)
+md1s <- summary(md1)
+names(md1s)
+
+sqrt(deviance(md1)/df.residual(md1))
+md1s$sigma
+
+xtxi <- md1s$cov.unscaled
+sqrt(diag(xtxi)) * 60.975
+
+md1s$coef[ , 2]
+
+1 - deviance(md1) / sum((y-mean(y))^2)
+
+md1s$r.squared
+```
+
 
 
 
